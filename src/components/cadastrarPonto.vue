@@ -17,7 +17,7 @@
           ref="menu"
           v-model="menu"
           :close-on-content-click="false"
-          :return-value.sync="date"
+          :return-value.sync="formularioCadastro.date"
           transition="scale-transition"
           offset-y
           min-width="auto"
@@ -32,10 +32,14 @@
               v-on="on"
             ></v-text-field>
           </template>
-          <v-date-picker v-model="date" no-title scrollable>
+          <v-date-picker v-model="formularioCadastro.date" no-title scrollable>
             <v-spacer></v-spacer>
             <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
-            <v-btn text color="primary" @click="$refs.menu.save(date)">
+            <v-btn
+              text
+              color="primary"
+              @click="$refs.menu.save(formularioCadastro.date)"
+            >
               OK
             </v-btn>
           </v-date-picker>
@@ -136,30 +140,33 @@
 export default {
   data: () => ({
     items: ["Vidam", "Del Mar"],
-    date: null,
     menu: false,
     menuHora: false,
     menuHoraFim: false,
+    saved: false,
     menu2: false,
     menu3: false,
     modal: false,
     id: null,
     formularioCadastro: {
+      date: null,
       timeEnd: null,
       nome: null,
       timeStart: null,
       descricao: null,
+      diaria: 68.0,
     },
     formularioCadastroDefault: {
       timeEnd: null,
       nome: null,
+      date: null,
       timeStart: null,
       descricao: null,
     },
   }),
   computed: {
     data() {
-      return this.formatarData(this.date);
+      return this.formatarData(this.formularioCadastro.date);
     },
   },
   methods: {
@@ -172,6 +179,7 @@ export default {
       Object.assign(this.formularioCadastro, this.formularioCadastroDefault);
     },
     salvar() {
+      this.saved = true;
       const metodo = this.id ? "patch" : "post";
       const finalUrl = this.id ? `/${this.id}.json` : ".json";
       this.$api[metodo](
@@ -179,12 +187,13 @@ export default {
         this.formularioCadastro
       ).then(() => {
         this.limparFormulario();
+        this.saved = false;
       });
     },
   },
-  created() {
-    this.$api.post("hoteis.json", [{ nome: "Vidam" }, { nome: "Del Mar" }]);
-  },
+  // created() {
+  //   this.$api.post("hoteis.json", [{ nome: "Vidam" }, { nome: "Del Mar" }]);
+  // },
 };
 </script>
 
