@@ -125,12 +125,19 @@
     </v-row>
     <v-row class="ma-1">
       <v-col cols="6">
-        <v-btn class="mb-1" block color="primary" @click="salvar()"
+        <v-btn
+          :disabled="!this.dadosValido()"
+          class="mb-1"
+          block
+          color="primary"
+          @click="salvar()"
           >Salvar</v-btn
         >
       </v-col>
       <v-col cols="6">
-        <v-btn class="mb-1" block color="error">Limpar</v-btn>
+        <v-btn class="mb-1" block color="error" @click="limparFormulario()"
+          >Limpar</v-btn
+        >
       </v-col>
     </v-row>
   </section>
@@ -138,6 +145,11 @@
 
 <script>
 export default {
+  props: {
+    save: {
+      type: Boolean,
+    },
+  },
   data: () => ({
     items: ["Vidam", "Del Mar"],
     menu: false,
@@ -178,7 +190,17 @@ export default {
     limparFormulario() {
       Object.assign(this.formularioCadastro, this.formularioCadastroDefault);
     },
+    dadosValido() {
+      return (
+        this.formularioCadastro.timeEnd &&
+        this.formularioCadastro.nome &&
+        this.formularioCadastro.date &&
+        this.formularioCadastro.timeStart &&
+        this.formularioCadastro.descricao
+      );
+    },
     salvar() {
+      this.$emit("update:refetch");
       this.saved = true;
       const metodo = this.id ? "patch" : "post";
       const finalUrl = this.id ? `/${this.id}.json` : ".json";
