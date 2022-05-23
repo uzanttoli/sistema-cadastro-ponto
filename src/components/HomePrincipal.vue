@@ -17,9 +17,14 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-divider class="ma-5"></v-divider>
         <v-row>
           <v-col cols="4">
-            <card-semana />
+            <card-semana>
+              <template v-slot:conteudo>
+                <pre>{{ _dados }}</pre>
+              </template>
+            </card-semana>
           </v-col>
         </v-row>
       </v-col>
@@ -39,7 +44,32 @@ export default {
   },
   data: () => ({
     attHistorico: false,
+    dados: [],
   }),
+  computed: {
+    _dados() {
+      let dados = this.dados;
+      for (const [key, value] of Object.entries(dados)) {
+        let chave = key;
+        console.log(chave);
+        let dados = value;
+        for (const [key2, value2] of Object.entries(dados)) {
+          console.log(key2, value2);
+        }
+      }
+      return dados;
+    },
+  },
+  methods: {
+    loadBase() {
+      this.$api.get("dados_hotel.json").then((res) => {
+        this.dados = res.data;
+      });
+    },
+  },
+  created() {
+    this.loadBase();
+  },
 };
 </script>
 

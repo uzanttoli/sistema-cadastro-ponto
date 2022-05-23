@@ -1,6 +1,6 @@
 <template>
   <section class="historico" v-if="base">
-    <v-card-title>Histórico | Total R$</v-card-title>
+    <v-card-title>Histórico | Total R$ </v-card-title>
     <v-divider></v-divider>
     <v-card class="mx-auto overflow-auto" height="412">
       <v-card-text class="py-0">
