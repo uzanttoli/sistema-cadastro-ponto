@@ -15,7 +15,6 @@
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="text-center"></v-list-item-title>
-        {{day}}
         <slot name="conteudo"></slot>
       </v-list-item-content>
     </v-list-item>
