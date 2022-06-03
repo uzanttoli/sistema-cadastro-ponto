@@ -12,7 +12,7 @@
             :key="i"
           >
             <v-row class="pt-1">
-              <v-col cols="3">
+              <v-col cols="3" >
                 <v-row>
                   <v-tooltip bottom color="red">
                     <template v-slot:activator="{ attrs, on }">
@@ -30,22 +30,28 @@
                   </v-tooltip>
                 </v-row>
               </v-col>
-              <v-col>
-                Data: <strong>{{ convertDataBR(item.date) }}</strong>
-                <div class="text-caption">
-                  De {{ item.timeStart }} até {{ item.timeEnd }}
-                </div>
-                <div>R$ {{ item.diaria }}</div>
-                <div>
-                  <v-textarea
-                    filled
-                    label="Descrição"
-                    auto-grow
-                    rows="1"
-                    disabled
-                    :value="item.descricao"
-                  ></v-textarea>
-                </div>
+              <v-divider vertical></v-divider>
+              <v-col style="margin-top:09px; margin-left:20px">
+                <v-row>
+                  Data: <strong>{{ convertDataBR(item.date) }}</strong>
+                  <div class="text-caption ml-2">
+                    De {{ item.timeStart }} até {{ item.timeEnd }}
+                  </div>
+                  <div class="ml-2">R$ {{ item.diaria }}</div>
+                  <!-- <div>
+                    <v-textarea
+                      filled
+                      label="Descrição"
+                      auto-grow
+                      rows="1"
+                      height="05"
+                      style="margin-top:-15px"
+                      class="ml-5"
+                      disabled
+                      :value="item.descricao"
+                    ></v-textarea>
+                  </div> -->
+                </v-row>
               </v-col>
             </v-row>
           </v-timeline-item>

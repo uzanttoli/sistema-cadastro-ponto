@@ -17,42 +17,37 @@
             </v-card>
           </v-col>
         </v-row>
-        <v-divider class="ma-5"></v-divider>
-        <v-row>
-          <v-col cols="4" v-for="i in cards()" :key="i">
-            <card-semana>
-              <template v-slot:conteudo>
-                <span
-                  v-for="(item, i) in dados"
-                  :key="i"
-                  class="text-no-wrap font-weight-medium"
-                >
-                  # {{ diaSemana(item.date) }}, {{ formatDate(item.date) }},
-                  {{ item.nome }}, {{ item.timeStart + "h" }} -
-                  {{ item.timeEnd + "h" }}
-                </span>
-              </template>
-            </card-semana>
-          </v-col>
-        </v-row>
       </v-col>
+      <div class="container">
+        <form ref="form" @submit.prevent="sendEmail">
+          <label>Name</label>
+          <input type="text" name="user_name" />
+          <label>Email</label>
+          <input type="email" name="user_email" />
+          <label>Message</label>
+          <textarea name="message"></textarea>
+          <input type="submit" value="Send" />
+        </form>
+      </div>
     </v-card>
   </v-container>
 </template>
 
 <script>
-import cardSemana from "./cards/cardSemana.vue";
+import emailjs from "emailjs-com";
 import cadastroPonto from "./cadastrarPonto.vue";
 import historicoCadastro from "./historicoCadastro.vue";
 export default {
   components: {
     cadastroPonto,
     historicoCadastro,
-    cardSemana,
   },
   data: () => ({
     attHistorico: false,
     dados: [],
+    name: "",
+    email: "",
+    message: "",
   }),
   computed: {
     _dados() {
@@ -69,9 +64,26 @@ export default {
     },
   },
   methods: {
+    sendEmail() {
+      emailjs
+        .sendForm(
+          `${process.env.YOUR_SERVICE_ID}`,
+          `${process.env.YOUR_TEMPLATE_ID}`,
+          this.$refs.form,
+          `${process.env.YOUR_PUBLIC_KEY}`
+        )
+        .then(
+          (result) => {
+            console.log("SUCCESS!", result.text);
+          },
+          (error) => {
+            console.log("FAILED...", error.text);
+          }
+        );
+    },
     cards() {
       let n = 1;
-      console.log(n)
+      console.log(n);
       // let dados = this.dados;
       // for (let i = 0; i < Object.keys(dados).length; i++) {
       //   if (Object.keys(dados).length > 7) {
@@ -94,7 +106,7 @@ export default {
         "Quinta-Feira",
         "Sexta-Feira",
         "Sábado",
-        "Domingo"
+        "Domingo",
       ];
       let date = new Date(value);
       return semana[date.getDay()].slice(0, 3);
