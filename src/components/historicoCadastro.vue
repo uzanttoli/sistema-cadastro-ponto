@@ -12,7 +12,7 @@
             :key="i"
           >
             <v-row class="pt-1">
-              <v-col cols="3" >
+              <v-col cols="3">
                 <v-row>
                   <v-tooltip bottom color="red">
                     <template v-slot:activator="{ attrs, on }">
@@ -31,7 +31,7 @@
                 </v-row>
               </v-col>
               <v-divider vertical></v-divider>
-              <v-col style="margin-top:09px; margin-left:20px">
+              <v-col style="margin-top: 09px; margin-left: 20px">
                 <v-row>
                   Data: <strong>{{ convertDataBR(item.date) }}</strong>
                   <div class="text-caption ml-2">

@@ -10,6 +10,8 @@
           filled
           v-model="formularioCadastro.nome"
           label="Hotel"
+          @change="numeroId()"
+          no-data-text="Não há cadastro com esse nome!"
         ></v-autocomplete>
       </v-col>
       <v-col cols="6">
@@ -118,6 +120,7 @@
           auto-grow
           label="Descrição, caso necessario"
           rows="4"
+          @change="corpoForm()"
           row-height="15"
           shaped
         ></v-textarea>
@@ -125,14 +128,22 @@
     </v-row>
     <v-row class="ma-1">
       <v-col cols="6">
-        <v-btn
-          :disabled="!this.dadosValido()"
-          class="mb-1"
-          block
-          color="primary"
-          @click="salvar()"
-          >Salvar</v-btn
-        >
+        <form ref="form" @submit.prevent="sendEmail">
+          <div class="d-none">
+            <input type="text" name="user_name" />
+            <input type="email" name="user_email" :value="user_email" />
+            <v-textarea name="message" :value="html"> </v-textarea>
+          </div>
+          <v-btn
+            :disabled="!this.dadosValido()"
+            class="mb-1"
+            type="submit"
+            block
+            color="primary"
+            @click="salvar()"
+            >Salvar</v-btn
+          >
+        </form>
       </v-col>
       <v-col cols="6">
         <v-btn class="mb-1" block color="error" @click="limparFormulario()"
@@ -144,6 +155,7 @@
 </template>
 
 <script>
+import emailjs from "emailjs-com";
 export default {
   props: {
     save: {
@@ -151,6 +163,8 @@ export default {
     },
   },
   data: () => ({
+    user_name: "Adriele",
+    user_email: "uosantos@outlook.com.br",
     items: ["Vidam", "Del Mar"],
     menu: false,
     menuHora: false,
@@ -159,6 +173,8 @@ export default {
     menu2: false,
     menu3: false,
     modal: false,
+    base: [],
+    html: "",
     id: null,
     formularioCadastro: {
       date: null,
@@ -166,6 +182,7 @@ export default {
       nome: null,
       timeStart: null,
       descricao: null,
+      numId: null,
       diaria: 68.0,
     },
     formularioCadastroDefault: {
@@ -182,6 +199,66 @@ export default {
     },
   },
   methods: {
+    numeroId() {
+      let min = Math.ceil(5);
+      let max = Math.floor(10000);
+      return (this.formularioCadastro.numId =
+        Math.floor(Math.random() * (max - min)) + min);
+    },
+    corpoForm() {
+      let hotel = this.formularioCadastro.nome;
+      let date = this.formularioCadastro.date;
+      let diaria = this.formularioCadastro.diaria;
+      let descricao = this.formularioCadastro.descricao;
+      let numId = this.formularioCadastro.numId;
+
+      this.html =
+        this.html +
+        `
+              <h3>Olá ${this.user_name}</h3>
+              <h5>Aqui está seu registro diario de trabalho:</h5>
+              <h3>Número do registro: # ${numId}</h3>
+              <table summary="Registro breve do seu trabalho feito com muito carinho!" border="1">
+              <caption>Resumo do Seu Dia</caption>
+              <thead>
+                <tr style="text-align: center">
+                  <th style="background-color:#999;" colspan="4">Tabela de Trabalho</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="text-align: center; font-weight: bold;">
+                  <td  style="padding: 0px 5px 0px 5px">Nome Hotel</td>
+                  <td  style="padding: 0px 5px 0px 5px">Data</td>
+                  <td  style="padding: 0px 5px 0px 5px">Diaria</td>
+                  <td  style="padding: 0px 5px 0px 5px">Descrição</td>
+                </tr>
+                <tr style="text-align: center">
+                  <td>${hotel}</td>
+                  <td>${date}</td>
+                  <td>R$ ${diaria}</td>
+                  <td>${descricao}</td>
+                </tr>
+              </tbody>
+              </table>
+          `;
+    },
+    sendEmail() {
+      emailjs
+        .sendForm(
+          `service_8yfxb5f`,
+          `template_mgkxs1m`,
+          this.$refs.form,
+          `fKL7cdgQ9-G9WVKxD`
+        )
+        .then(
+          (result) => {
+            console.log("SUCCESS!", result.text);
+          },
+          (error) => {
+            console.log("FAILED...", error.text);
+          }
+        );
+    },
     formatarData(date) {
       if (!date) return;
       const [year, month, day] = date.split("-");
@@ -199,6 +276,11 @@ export default {
         this.formularioCadastro.descricao
       );
     },
+    loadBase() {
+      this.$api.get("dados_hotel.json").then((res) => {
+        this.base = res.data;
+      });
+    },
     salvar() {
       this.$emit("update:refetch");
       this.saved = true;
@@ -210,13 +292,13 @@ export default {
       ).then(() => {
         this.limparFormulario();
         this.saved = false;
+        this.html = ""
       });
     },
   },
-  // created() {
-  //   this.$api.post("hoteis.json", [{ nome: "Vidam" }, { nome: "Del Mar" }]);
-  // },
+  watch: {},
+  created() {},
 };
 </script>
 
-<style></style>
+<style scoped></style>
