@@ -1,5 +1,5 @@
 <template>
-  <div id="app" data-app>
+  <div id="app">
     <v-app>
       <v-card
         elevate-on-scroll
@@ -7,11 +7,11 @@
         height="100%"
         width="100%"
       >
-        <template v-if="login">
+        <template v-if="userData">
           <app-bar></app-bar>
           <main-container></main-container>
         </template>
-        <app-login v-else></app-login>
+        <app-login v-else> </app-login>
       </v-card>
     </v-app>
   </div>
@@ -28,8 +28,16 @@ export default {
     appLogin,
   },
   data: () => ({
-    login: true,
+    login: false,
+    nome: null,
+    email: null,
   }),
+  computed: {
+    userData() {
+      return JSON.parse(localStorage.getItem("userData"));
+    },
+  },
+  methods: {},
 };
 </script>
 <style lang="scss">
@@ -39,6 +47,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+body,
+html {
+  min-height: 100%;
 }
 
 nav {

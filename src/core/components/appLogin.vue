@@ -19,6 +19,7 @@
                         <v-text-field
                           label="Nome"
                           outlined
+                          v-model="user.nome"
                           dense
                           color="blue"
                           autocomplete="false"
@@ -27,6 +28,7 @@
                         <v-text-field
                           label="Email"
                           outlined
+                          v-model="user.email"
                           dense
                           color="blue"
                           autocomplete="false"
@@ -46,7 +48,9 @@
                             >
                           </v-col>
                         </v-row>
-                        <v-btn color="blue" dark block tile>Login</v-btn>
+                        <v-btn color="blue" dark block tile @click="acessar()"
+                          >Login</v-btn
+                        >
                         <h5 class="text-center grey--text mt-4 mb-3">
                           Ou faça login usando
                         </h5>
@@ -199,12 +203,27 @@
 </template>
 
 <script>
+import router from "@/router/index";
 export default {
   data: () => ({
     step: 1,
+    user: {
+      nome: "",
+      email: "",
+    },
   }),
   props: {
     source: String,
+  },
+  methods: {
+    acessar() {
+      if (this.user.nome == "" || this.user.email == "") {
+        return;
+      }
+      localStorage.setItem("userData", JSON.stringify(this.user));
+      router.push("/");
+      window.location.reload();
+    },
   },
 };
 </script>
