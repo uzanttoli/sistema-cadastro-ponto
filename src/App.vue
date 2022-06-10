@@ -1,27 +1,56 @@
 <template>
-  <v-app>
-    <v-app-bar app color="primary" dark>
-      <h2>Sistema de cadastro | Hoteis</h2>
-    </v-app-bar>
-
-    <v-main>
-      <Home />
-    </v-main>
-  </v-app>
+  <div id="app" data-app>
+    <v-app>
+      <v-card
+        elevate-on-scroll
+        class="overflow-hidden"
+        height="100%"
+        width="100%"
+      >
+        <template v-if="login">
+          <app-bar></app-bar>
+          <main-container></main-container>
+        </template>
+        <app-login v-else></app-login>
+      </v-card>
+    </v-app>
+  </div>
 </template>
-
 <script>
-import Home from "./components/HomePrincipal.vue";
+import appBar from "@/core/components/appBar.vue";
+import mainContainer from "@/core/components/appMain.vue";
 
+import appLogin from "@/core/components/appLogin.vue";
 export default {
-  name: "App",
-
   components: {
-    Home,
+    appBar,
+    mainContainer,
+    appLogin,
   },
-
   data: () => ({
-    //
+    login: true,
   }),
 };
 </script>
+<style lang="scss">
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+nav {
+  padding: 30px;
+
+  a {
+    font-weight: bold;
+    color: #2c3e50;
+
+    &.router-link-exact-active {
+      color: #42b983;
+    }
+  }
+}
+</style>
