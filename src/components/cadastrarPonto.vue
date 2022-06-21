@@ -1,5 +1,6 @@
 <template>
   <section>
+    <pre>{{ user_name }}</pre>
     <v-card-title>Cadastrar Ponto</v-card-title>
     <v-divider></v-divider>
     <v-row class="ma-1">
@@ -163,8 +164,8 @@ export default {
     },
   },
   data: () => ({
-    user_name: "Adriele",
-    user_email: "uosantos@outlook.com.br",
+    user_name: "",
+    user_email: "",
     items: ["Vidam", "Del Mar"],
     menu: false,
     menuHora: false,
@@ -199,6 +200,12 @@ export default {
     },
   },
   methods: {
+    user() {
+      return (
+        (this.user_name = JSON.parse(localStorage.getItem("userData")).nome),
+        (this.user_email = JSON.parse(localStorage.getItem("userData")).email)
+      );
+    },
     numeroId() {
       let min = Math.ceil(5);
       let max = Math.floor(10000);
@@ -292,12 +299,14 @@ export default {
       ).then(() => {
         this.limparFormulario();
         this.saved = false;
-        this.html = ""
+        this.html = "";
       });
     },
   },
   watch: {},
-  created() {},
+  created() {
+    this.user();
+  },
 };
 </script>
 
