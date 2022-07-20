@@ -11,7 +11,7 @@ import router from "@/router/index";
 export default {
   methods: {
     sair() {
-      localStorage.removeItem("userData");
+      localStorage.removeItem("token");
       router.push("/login");
       window.location.reload();
     },

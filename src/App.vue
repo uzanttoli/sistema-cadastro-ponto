@@ -34,7 +34,7 @@ export default {
   }),
   computed: {
     userData() {
-      return JSON.parse(localStorage.getItem("userData"));
+      return JSON.parse(localStorage.getItem("token"));
     },
   },
   methods: {},

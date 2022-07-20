@@ -4,10 +4,10 @@ Vue.use({
   install(Vue) {
     Vue.prototype.$api = axios.create(
       {
-        baseURL: "https://sistema-cadastro-76d46-default-rtdb.firebaseio.com",
-        headers: {
-          Authorization: "abc123",
-        },
+        baseURL: "http://localhost:3000/",
+        // headers: {
+        //   Authorization: "Bearer " + localStorage.getItem("token"),
+        // },
       },
       (error) => Promise.reject(error)
     );
