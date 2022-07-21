@@ -11,7 +11,9 @@
           <app-bar></app-bar>
           <main-container></main-container>
         </template>
-        <app-login v-else> </app-login>
+        <template v-else>
+          <app-login-recovery> </app-login-recovery>
+        </template>
       </v-card>
     </v-app>
   </div>
@@ -20,12 +22,12 @@
 import appBar from "@/core/components/appBar.vue";
 import mainContainer from "@/core/components/appMain.vue";
 
-import appLogin from "@/core/components/appLogin.vue";
+import appLoginRecovery from "@/core/components/appLoginRecovery.vue";
 export default {
   components: {
     appBar,
     mainContainer,
-    appLogin,
+    appLoginRecovery,
   },
   data: () => ({
     login: false,

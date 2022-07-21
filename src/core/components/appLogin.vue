@@ -39,9 +39,15 @@
                         ></v-text-field>
                         <v-row>
                           <v-col cols="12" sm="5">
-                            <span class="caption blue--text"
-                              >Esqueceu Senha?</span
-                            >
+                            <router-link to="/recovery-password">
+                              <span
+                                class="caption blue--text"
+                                style="cursor: pointer"
+                                @click="$emit('recoverypassword')"
+                              >
+                                Esqueceu Senha?</span
+                              >
+                            </router-link>
                           </v-col>
                         </v-row>
                         <v-btn
@@ -157,6 +163,15 @@
                 </v-icon>
               </template>
             </v-snackbar>
+            <v-snackbar v-model="alertErroLogin">
+              {{ textLogin }}
+
+              <template v-slot:action="{ attrs }">
+                <v-icon color="red" text v-bind="attrs">
+                  fa-solid fa-triangle-exclamation
+                </v-icon>
+              </template>
+            </v-snackbar>
           </v-window>
         </v-card>
       </v-col>
@@ -167,10 +182,14 @@
 <script>
 import router from "../../router/index";
 export default {
+  components: {},
   data: () => ({
     step: 1,
     alertNewRegister: false,
+    resetSenha: false,
     send: false,
+    textLogin: "",
+    alertErroLogin: false,
     sendLogin: false,
     text: "Cadastro realizado com sucesso!",
     user: {
@@ -188,27 +207,39 @@ export default {
   },
   methods: {
     login() {
-      if (this.user.email == "" || this.user.password == "") {
-        return;
-      }
       this.sendLogin = true;
-      this.$api.post("/login", this.user).then((res) => {
-        localStorage.setItem("token", JSON.stringify(res.data.token));
-        router.push("/");
-        window.location.reload();
-        this.sendLogin = false; 
-      });
-      // console.log(result);F
-      // router.push("/");
-      // window.location.reload();
+      this.$api
+        .post("/login", this.user)
+        .then((res) => {
+          if (res.data.token != undefined) {
+            localStorage.setItem("token", JSON.stringify(res.data.token));
+            router.push("/");
+            window.location.reload();
+          } else {
+            return;
+          }
+        })
+        .catch((err) => {
+          this.alertErroLogin = true;
+          this.textLogin = err.response.data.err;
+          this.sendLogin = false;
+        });
     },
-    async newRegister() {
+    newRegister() {
       this.send = true;
-      await this.$api.post("/users", this.register).then(() => {
-        this.alertNewRegister = true;
-        this.send = false;
-        this.step = 1;
-      });
+      this.$api
+        .post("/users", this.register)
+        .then((res) => {
+          console.log(res);
+          this.alertNewRegister = true;
+          this.send = false;
+          this.step = 1;
+        })
+        .catch((err) => {
+          this.alertErroLogin = true;
+          this.textLogin = err.response.data.err;
+          this.send = false;
+        });
     },
   },
 };
